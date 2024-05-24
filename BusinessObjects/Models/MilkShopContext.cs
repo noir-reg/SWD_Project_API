@@ -20,9 +20,11 @@ namespace BusinessObjects.Models
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Comment> Comments { get; set; } = null!;
+        public virtual DbSet<Delivery> Deliveries { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
+        public virtual DbSet<ProductDetailImage> ProductDetailImages { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -130,6 +132,27 @@ namespace BusinessObjects.Models
                     .HasConstraintName("FK_Comment_Account");
             });
 
+            modelBuilder.Entity<Delivery>(entity =>
+            {
+                entity.ToTable("Delivery");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.DeliveryManId).HasColumnName("deliveryManId");
+
+                entity.Property(e => e.OrderId).HasColumnName("orderId");
+
+                entity.HasOne(d => d.DeliveryMan)
+                    .WithMany(p => p.Deliveries)
+                    .HasForeignKey(d => d.DeliveryManId)
+                    .HasConstraintName("FK_Delivery_Account");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.Deliveries)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK_Delivery_Order");
+            });
+
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.ToTable("Order");
@@ -137,6 +160,10 @@ namespace BusinessObjects.Models
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CustomerId).HasColumnName("customerID");
+
+                entity.Property(e => e.ExpectedDeliveryDate)
+                    .HasColumnType("date")
+                    .HasColumnName("expectedDeliveryDate");
 
                 entity.Property(e => e.IsPreOrder).HasColumnName("isPreOrder");
 
@@ -205,7 +232,7 @@ namespace BusinessObjects.Models
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Category).HasColumnName("category");
+                entity.Property(e => e.CategoryId).HasColumnName("categoryId");
 
                 entity.Property(e => e.Discount).HasColumnName("discount");
 
@@ -221,11 +248,29 @@ namespace BusinessObjects.Models
 
                 entity.Property(e => e.Stock).HasColumnName("stock");
 
-                entity.HasOne(d => d.CategoryNavigation)
+                entity.HasOne(d => d.Category)
                     .WithMany(p => p.Products)
-                    .HasForeignKey(d => d.Category)
+                    .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Product_Category");
+            });
+
+            modelBuilder.Entity<ProductDetailImage>(entity =>
+            {
+                entity.ToTable("ProductDetailImage");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.ImageUrl)
+                    .IsUnicode(false)
+                    .HasColumnName("imageUrl");
+
+                entity.Property(e => e.ProductId).HasColumnName("productId");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ProductDetailImages)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK_ProductDetailImage_Product");
             });
 
             OnModelCreatingPartial(modelBuilder);
