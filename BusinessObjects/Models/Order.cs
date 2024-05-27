@@ -7,23 +7,18 @@ namespace BusinessObjects.Models
     {
         public Order()
         {
-            Deliveries = new HashSet<Delivery>();
             OrderDetails = new HashSet<OrderDetail>();
+            OrderStatuses = new HashSet<OrderStatus>();
         }
 
         public int Id { get; set; }
         public int CustomerId { get; set; }
         public int? StaffId { get; set; }
-        public string? PaymentMethod { get; set; }
-        public string? OrderStatus { get; set; }
-        public DateTime? OrderDate { get; set; }
-        public bool IsPreOrder { get; set; }
-        public double? Total { get; set; }
-        public DateTime? ExpectedDeliveryDate { get; set; }
+        public int? PaymentId { get; set; }
 
-        public virtual Account Customer { get; set; } = null!;
+        public virtual Payment? Payment { get; set; }
         public virtual Account? Staff { get; set; }
-        public virtual ICollection<Delivery> Deliveries { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<OrderStatus> OrderStatuses { get; set; }
     }
 }

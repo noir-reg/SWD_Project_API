@@ -1,16 +1,14 @@
-﻿using System;
+﻿using BusinessObjects.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace BusinessObjects.Models
+namespace BusinessObjects.DTOs
 {
-    public partial class Account
+    public class LoginResponse
     {
-        public Account()
-        {
-            Comments = new HashSet<Comment>();
-            Orders = new HashSet<Order>();
-        }
-
         public int Id { get; set; }
         public string? Password { get; set; }
         public string Email { get; set; } = null!;
@@ -22,9 +20,7 @@ namespace BusinessObjects.Models
         public bool? Gender { get; set; }
         public int? Point { get; set; }
         public int? Phone { get; set; }
-
-        public virtual Role Role { get; set; } = null!;
-        public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
+        public string Role { get; set; } = null!;
+        public string? AccessToken { get; set;}
     }
 }

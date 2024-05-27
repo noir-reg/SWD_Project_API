@@ -1,8 +1,0 @@
-steps:
-- name: 'microsoft/dotnet:sdk'
-  entrypoint: 'dotnet'
-  args: ['publish', '-c', 'Release']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/groovy-scarab-424602-g6/testapp:2.1', '.']
-  dir: './bin/Release/netcoreapp2.1/publish'
-images: ['gcr.io/groovy-scarab-424602-g6/swd']
