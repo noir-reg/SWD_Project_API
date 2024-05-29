@@ -26,9 +26,16 @@ namespace Repositories.Implementation
             });
             if (_context.SaveChanges() >= 1)
             {
+                var cartItem = _context.Carts.
+                    Where(x => x.ProductId == createOrderDetailRequest.ProductId && x.AccountId == createOrderDetailRequest.AccountId).FirstOrDefault();
+                if (cartItem != null)
+                {
+                    _context.Carts.Remove(cartItem);
+                    _context.SaveChanges();
+                }
                 var product = _context.Products.Find(createOrderDetailRequest.ProductId);
                 product.Stock = product.Stock - createOrderDetailRequest.Quantity < 0 ? 0 : product.Stock - createOrderDetailRequest.Quantity;
-                product.QuantitySold = product.QuantitySold + createOrderDetailRequest.Quantity;
+                product.QuantitySold += createOrderDetailRequest.Quantity;
                 if (_context.SaveChanges() >= 1)
 
                     return true;

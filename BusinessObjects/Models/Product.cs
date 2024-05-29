@@ -7,6 +7,7 @@ namespace BusinessObjects.Models
     {
         public Product()
         {
+            Carts = new HashSet<Cart>();
             Comments = new HashSet<Comment>();
             Images = new HashSet<Image>();
             OrderDetails = new HashSet<OrderDetail>();
@@ -24,6 +25,7 @@ namespace BusinessObjects.Models
 
         public virtual Category? CategoryNavigation { get; set; }
         public virtual GiftProduct? GiftProduct { get; set; }
+        public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Image> Images { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

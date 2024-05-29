@@ -7,6 +7,7 @@ namespace BusinessObjects.Models
     {
         public Account()
         {
+            Carts = new HashSet<Cart>();
             Comments = new HashSet<Comment>();
             Deliveries = new HashSet<Delivery>();
             Orders = new HashSet<Order>();
@@ -25,6 +26,7 @@ namespace BusinessObjects.Models
         public int? Phone { get; set; }
 
         public virtual Role Role { get; set; } = null!;
+        public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Delivery> Deliveries { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
