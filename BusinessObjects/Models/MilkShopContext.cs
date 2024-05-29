@@ -81,7 +81,6 @@ namespace BusinessObjects.Models
                 entity.ToTable("Cart");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
                     .HasColumnName("id");
 
                 entity.Property(e => e.AccountId).HasColumnName("accountId");
