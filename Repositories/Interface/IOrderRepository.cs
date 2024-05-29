@@ -12,6 +12,6 @@ namespace Repositories.Interface
     {
         public CreateOrderResponse CreateOrder(CreateOrderRequest createOrderRequest);
         public List<OrderResponse> GetOrdersByUserId(int userId, string? status);
-         
+        public bool UpdateOrderStatus(int orderId, string status); 
     }
 }

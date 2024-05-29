@@ -70,4 +70,13 @@ public class OrderRepository : IOrderRepository
                    Total = x.Total
                }).ToList();
     }
+
+    public bool UpdateOrderStatus(int orderId, string status)
+    {
+        var order = _context.Orders.Include(x => x.OrderStatuses).FirstOrDefault(x => x.Id == orderId);
+        order.OrderStatuses.FirstOrDefault().OrderStatus1 = status;
+        if (_context.SaveChanges() >= 1)
+            return true;
+        return false;
+    }
 }

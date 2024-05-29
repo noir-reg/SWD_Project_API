@@ -25,5 +25,10 @@ namespace Services.Implementation
         {
            return _orderRepository.GetOrdersByUserId(userId,status);
         }
+
+        public bool UpdateOrderStatus(int orderId, string status)
+        {
+            return _orderRepository.UpdateOrderStatus(orderId,status);
+        }
     }
 }
