@@ -5,6 +5,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Stripe.net" Version="44.9.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Repositories\Repositories.csproj" />
   </ItemGroup>
 </Project>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
 
 namespace BusinessObjects.Models
 {
@@ -20,6 +19,8 @@ namespace BusinessObjects.Models
         public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Comment> Comments { get; set; } = null!;
+        public virtual DbSet<Delivery> Deliveries { get; set; } = null!;
+        public virtual DbSet<GiftProduct> GiftProducts { get; set; } = null!;
         public virtual DbSet<Image> Images { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
@@ -33,20 +34,10 @@ namespace BusinessObjects.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer(GetConnectionString());
+                optionsBuilder.UseSqlServer("Server=35.247.174.216;Database=MilkShop;User Id=sqlserver;Password=12345;Encrypt=True;TrustServerCertificate=True");
             }
         }
 
-        private string GetConnectionString()
-        {
-            IConfiguration config = new ConfigurationBuilder()
-             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", true, true)
-            .Build();
-            var strConn = config["ConnectionStrings:SWDProjectDatabase"];
-
-            return strConn;
-        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>(entity =>
@@ -129,6 +120,46 @@ namespace BusinessObjects.Models
                     .HasConstraintName("FK_Comment_Account");
             });
 
+            modelBuilder.Entity<Delivery>(entity =>
+            {
+                entity.ToTable("Delivery");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.DeliveryManId).HasColumnName("deliveryManId");
+
+                entity.Property(e => e.OrderId).HasColumnName("orderId");
+
+                entity.HasOne(d => d.DeliveryMan)
+                    .WithMany(p => p.Deliveries)
+                    .HasForeignKey(d => d.DeliveryManId)
+                    .HasConstraintName("FK_Delivery_Account");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.Deliveries)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK_Delivery_Order");
+            });
+
+            modelBuilder.Entity<GiftProduct>(entity =>
+            {
+                entity.HasKey(e => e.ProductId);
+
+                entity.ToTable("GiftProduct");
+
+                entity.Property(e => e.ProductId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("productId");
+
+                entity.Property(e => e.ExchangePoint).HasColumnName("exchangePoint");
+
+                entity.HasOne(d => d.Product)
+                    .WithOne(p => p.GiftProduct)
+                    .HasForeignKey<GiftProduct>(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_GiftProduct_Product");
+            });
+
             modelBuilder.Entity<Image>(entity =>
             {
                 entity.ToTable("Image");
@@ -157,6 +188,10 @@ namespace BusinessObjects.Models
                 entity.Property(e => e.PaymentId).HasColumnName("paymentID");
 
                 entity.Property(e => e.StaffId).HasColumnName("staffID");
+
+                entity.Property(e => e.Total)
+                    .HasColumnType("decimal(18, 0)")
+                    .HasColumnName("total");
 
                 entity.HasOne(d => d.Payment)
                     .WithMany(p => p.Orders)

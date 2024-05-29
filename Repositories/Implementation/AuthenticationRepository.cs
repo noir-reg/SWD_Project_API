@@ -24,7 +24,7 @@ namespace Repositories.Implementation
         {
             var acc = _context.Accounts.Include(x => x.Role).FirstOrDefault(x => x.Email.Equals(loginRequest.email) && x.Password.Equals(loginRequest.password) && x.IsActive);
             if (acc != null)
-            {
+            {   
                 JWTUtils jwt = new(_config);
                 var token = jwt.GenerateToken(acc.Role.Name);
                 return new LoginResponse

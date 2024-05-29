@@ -8,9 +8,9 @@ using System.Text;
 
 namespace Utils
 {
-    public class JWTUtils
+    public  class JWTUtils
     {
-        private readonly IConfiguration _config;
+        private  readonly IConfiguration _config;
         public  JWTUtils(IConfiguration config)
         {
             _config = config;
