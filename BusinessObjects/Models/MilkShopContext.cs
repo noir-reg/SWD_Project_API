@@ -88,7 +88,9 @@ namespace BusinessObjects.Models
                 entity.Property(e => e.ProductId).HasColumnName("productId");
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
-
+                entity.Property(e => e.Price)
+                   .HasColumnType("decimal(10, 0)")
+                   .HasColumnName("price");
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Carts)
                     .HasForeignKey(d => d.AccountId)
