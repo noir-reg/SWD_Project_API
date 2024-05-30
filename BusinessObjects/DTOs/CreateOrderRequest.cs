@@ -14,5 +14,6 @@ namespace BusinessObjects.DTOs
         public DateTime OrderDate { get; set; }
         public string OrderStatus1 { get; set; } = null!;
         public decimal Total { get; set; }
+        public List<CreateOrderDetailRequest> OrderDetails { get; set; }
     }
 }

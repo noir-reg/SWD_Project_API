@@ -21,14 +21,24 @@ namespace Services.Implementation
           return  _orderRepository.CreateOrder(createOrderRequest);
         }
 
+        public OrderResponse GetOrderById(int id)
+        {
+            return _orderRepository.GetOrderById(id);
+        }
+
+        public List<OrderResponse> GetOrders(string? status)
+        {
+            return _orderRepository.GetOrders(status);
+        }
+
         public List<OrderResponse> GetOrdersByUserId(int userId, string? status)
         {
            return _orderRepository.GetOrdersByUserId(userId,status);
         }
 
-        public bool UpdateOrderStatus(int orderId, string status)
+        public bool UpdateOrderStatus(int orderId, int? staffId, string status)
         {
-            return _orderRepository.UpdateOrderStatus(orderId,status);
+            return _orderRepository.UpdateOrderStatus(orderId,staffId,status);
         }
     }
 }

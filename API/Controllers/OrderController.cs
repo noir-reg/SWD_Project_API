@@ -22,14 +22,24 @@ namespace API.Controllers
             return BadRequest("Can not create order");
         }
         [HttpGet("get-orders-by-user-id")]
-        public IActionResult GetOrdersById(int usersId,string? status)
+        public IActionResult GetOrdersById([FromQuery]int usersId, [FromQuery] string? status)
         {            
                 return Ok(_orderService.GetOrdersByUserId(usersId,status));
         }
-        [HttpGet("update-order-status")]
-        public IActionResult UpdateOrderStatus(int orderId,string status)
+        [HttpGet("get-orders")]
+        public IActionResult GetOrders([FromQuery] string? status)
         {
-            if (_orderService.UpdateOrderStatus(orderId, status))
+            return Ok(_orderService.GetOrders(status));
+        }
+        [HttpGet("get-order-by-id")]
+        public IActionResult GetOrdersById([FromQuery] int id)
+        {
+            return Ok(_orderService.GetOrderById(id));
+        }
+        [HttpGet("update-order-status")]
+        public IActionResult UpdateOrderStatus([FromQuery] int orderId, [FromQuery] int? staffId, [FromQuery] string status)
+        {
+            if (_orderService.UpdateOrderStatus(orderId, staffId, status))
                 return Ok("Update order status successfully");
             return BadRequest("Can not update order status");
         }
