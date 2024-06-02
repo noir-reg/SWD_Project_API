@@ -30,7 +30,7 @@ namespace API.Controllers
             return BadRequest("Can not register");
         }
         [HttpPost("login-with-google")]
-        [Authorize(Roles ="member")]
+        
         public IActionResult LoginWithGoogle(string email,string fullName)
         {
             if (_authenticationService.LoginWithGoogle(email, fullName) != null)
