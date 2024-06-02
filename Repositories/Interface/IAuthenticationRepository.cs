@@ -10,6 +10,7 @@ namespace Repositories.Interface
     public interface IAuthenticationRepository
     {
         public LoginResponse Login(LoginRequest loginRequest);      
+        public LoginResponse LoginWithGoogle(string email,string fullName);      
         public bool Register(RegisterRequest registerRequest);      
     }
 }

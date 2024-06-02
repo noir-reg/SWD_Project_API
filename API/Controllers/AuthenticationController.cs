@@ -1,5 +1,5 @@
 ﻿using BusinessObjects.DTOs;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
@@ -28,6 +28,14 @@ namespace API.Controllers
             if (_authenticationService.Register(registerRequest))
                 return Ok("Register successfully");
             return BadRequest("Can not register");
+        }
+        [HttpPost("login-with-google")]
+        [Authorize(Roles ="member")]
+        public IActionResult LoginWithGoogle(string email,string fullName)
+        {
+            if (_authenticationService.LoginWithGoogle(email, fullName) != null)
+                return Ok(_authenticationService.LoginWithGoogle(email, fullName));
+            return BadRequest("Cannot login");
         }
     }
 }

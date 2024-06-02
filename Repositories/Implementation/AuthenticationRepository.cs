@@ -22,9 +22,9 @@ namespace Repositories.Implementation
         }
         public LoginResponse Login(LoginRequest loginRequest)
         {
-            var acc = _context.Accounts.Include(x => x.Role).FirstOrDefault(x => x.Email.Equals(loginRequest.email) && x.Password.Equals(loginRequest.password) && x.IsActive);
+            var acc = _context.Accounts.Include(x => x.Role).FirstOrDefault(x => (x.Email.ToLower().Equals(loginRequest.email.ToLower()) || x.Phone.Equals(loginRequest.email)) && x.Password.Equals(loginRequest.password) && x.IsActive);
             if (acc != null)
-            {   
+            {
                 JWTUtils jwt = new(_config);
                 var token = jwt.GenerateToken(acc.Role.Name);
                 return new LoginResponse
@@ -45,6 +45,66 @@ namespace Repositories.Implementation
                 };
             }
             return null;
+        }
+
+        public LoginResponse LoginWithGoogle(string email, string fullName)
+        {
+            var acc = _context.Accounts.Include(x => x.Role).FirstOrDefault(x => x.Email.ToLower().Equals(email.ToLower()));
+            if (acc != null)
+            {
+                JWTUtils jwt = new(_config);
+                var token = jwt.GenerateToken(acc.Role.Name);
+                return new LoginResponse
+                {
+                    Id = acc.Id,
+                    Password = acc.Password,
+                    Email = acc.Email,
+                    Fullname = acc.Fullname,
+                    Birthday = acc.Birthday,
+                    Roleid = acc.Roleid,
+                    Address = acc.Address,
+                    IsActive = acc.IsActive,
+                    Gender = acc.Gender,
+                    Point = acc.Point,
+                    Phone = acc.Phone,
+                    Role = acc.Role.Name,
+                    AccessToken = token
+                };
+            }
+            else
+            {
+                _context.Accounts.Add(new Account
+                {
+                    IsActive = true,
+                    Email = email,
+                    Fullname = fullName,
+                    Point = 0,
+                    Roleid = 1
+                });
+                if (_context.SaveChanges() >= 1)
+                {
+                    var newAcc = _context.Accounts.Include(x => x.Role).FirstOrDefault(x => x.Email.ToLower().Equals(email.ToLower()));
+                    JWTUtils jwt = new(_config);
+                    var token = jwt.GenerateToken(newAcc.Role.Name);
+                    return new LoginResponse
+                    {
+                        Id = newAcc.Id,
+                        Password = newAcc.Password,
+                        Email = newAcc.Email,
+                        Fullname = newAcc.Fullname,
+                        Birthday = newAcc.Birthday,
+                        Roleid = newAcc.Roleid,
+                        Address = newAcc.Address,
+                        IsActive = newAcc.IsActive,
+                        Gender = newAcc.Gender,
+                        Point = newAcc.Point,
+                        Phone = newAcc.Phone,
+                        Role = newAcc.Role.Name,
+                        AccessToken = token
+                    };
+                }
+                return null;
+            }
         }
 
         public bool Register(RegisterRequest registerRequest)
@@ -68,7 +128,7 @@ namespace Repositories.Implementation
             var result = _context.SaveChanges();
             if (result >= 1)
                 return true;
-            return false;  
+            return false;
         }
     }
 }

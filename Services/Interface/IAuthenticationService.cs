@@ -10,6 +10,7 @@ namespace Services.Interface
     public interface IAuthenticationService
     {
         public LoginResponse Login(LoginRequest loginRequest);  
-        public bool Register(RegisterRequest registerRequest);  
+        public bool Register(RegisterRequest registerRequest);
+        public LoginResponse LoginWithGoogle(string email, string fullName);
     }
 }

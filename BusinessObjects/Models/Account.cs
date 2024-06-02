@@ -23,7 +23,7 @@ namespace BusinessObjects.Models
         public bool IsActive { get; set; }
         public bool? Gender { get; set; }
         public int? Point { get; set; }
-        public int? Phone { get; set; }
+        public string? Phone { get; set; }
 
         public virtual Role Role { get; set; } = null!;
         public virtual ICollection<Cart> Carts { get; set; }

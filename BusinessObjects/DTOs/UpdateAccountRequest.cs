@@ -14,6 +14,6 @@ namespace BusinessObjects.DTOs
         public string? Address { get; set; }
         public bool? IsActive { get; set; }
         public bool? Gender { get; set; }  
-        public int? Phone { get; set; }
+        public string? Phone { get; set; }
     }
 }

@@ -21,6 +21,11 @@ namespace Services.Implementation
             return _repository.Login(loginRequest);
         }
 
+        public LoginResponse LoginWithGoogle(string email, string fullName)
+        {
+            return _repository.LoginWithGoogle(email, fullName);
+        }
+
         public bool Register(RegisterRequest registerRequest)
         {
             return _repository.Register(registerRequest);

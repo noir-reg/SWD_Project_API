@@ -19,7 +19,7 @@ namespace BusinessObjects.DTOs
         public bool IsActive { get; set; }
         public bool? Gender { get; set; }
         public int? Point { get; set; }
-        public int? Phone { get; set; }
+        public string? Phone { get; set; }
         public string Role { get; set; } = null!;
         public string? AccessToken { get; set;}
     }
