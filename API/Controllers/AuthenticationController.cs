@@ -31,10 +31,10 @@ namespace API.Controllers
         }
         [HttpPost("login-with-google")]
         
-        public IActionResult LoginWithGoogle(string email,string fullName)
+        public IActionResult LoginWithGoogle(string email,string fullName, [FromBody]string googleToken)
         {
-            if (_authenticationService.LoginWithGoogle(email, fullName) != null)
-                return Ok(_authenticationService.LoginWithGoogle(email, fullName));
+            if (_authenticationService.LoginWithGoogle(email, fullName,googleToken) != null)
+                return Ok(_authenticationService.LoginWithGoogle(email, fullName, googleToken));
             return BadRequest("Cannot login");
         }
     }

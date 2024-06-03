@@ -11,6 +11,6 @@ namespace Services.Interface
     {
         public LoginResponse Login(LoginRequest loginRequest);  
         public bool Register(RegisterRequest registerRequest);
-        public LoginResponse LoginWithGoogle(string email, string fullName);
+        public LoginResponse LoginWithGoogle(string email, string fullName, string googleToken);
     }
 }

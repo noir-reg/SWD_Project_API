@@ -1,5 +1,7 @@
 ﻿using BusinessObjects.DTOs;
 using BusinessObjects.Models;
+using Google.Apis.Auth;
+using Microsoft.Data.SqlClient.Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Repositories.Interface;
@@ -47,9 +49,17 @@ namespace Repositories.Implementation
             return null;
         }
 
-        public LoginResponse LoginWithGoogle(string email, string fullName)
+        public LoginResponse LoginWithGoogle(string email, string fullName, string googleToken)
         {
-            var acc = _context.Accounts.Include(x => x.Role).FirstOrDefault(x => x.Email.ToLower().Equals(email.ToLower()));
+            try
+            {
+                var payload = GoogleJsonWebSignature.ValidateAsync(googleToken);               
+            }
+            catch (InvalidJwtException)
+            {               
+                return null;
+            }
+            var acc = _context.Accounts.Include(x => x.Role).FirstOrDefault(x => x.Email.ToLower().Equals(email.ToLower())&&x.Roleid==1);
             if (acc != null)
             {
                 JWTUtils jwt = new(_config);
