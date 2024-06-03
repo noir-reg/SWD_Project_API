@@ -63,7 +63,7 @@ namespace Repositories.Implementation
                 Quantity = x.Quantity,
                 AccountId = x.AccountId,
                 Id = x.Id,
-                Price = x.Price,
+                Price = (decimal)x.Price,
                 ProductId = x.ProductId
             }).ToList();
         }
