@@ -22,9 +22,17 @@ namespace BusinessObjects.Models
         public int IsAvailable { get; set; }
         public int QuantitySold { get; set; }
         public string? Image { get; set; }
+        public bool? IsPreorder { get; set; }
+        public bool? IsGift { get; set; }
+        public int? GiftPoint { get; set; }
+        public int? Capacity { get; set; }
+        public string? Origin { get; set; }
+        public string? Brand { get; set; }
+        public int? Age { get; set; }
+        public string? Size { get; set; }
+        public string? Description { get; set; }
 
         public virtual Category? CategoryNavigation { get; set; }
-        public virtual GiftProduct? GiftProduct { get; set; }
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Image> Images { get; set; }

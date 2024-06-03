@@ -21,12 +21,12 @@ namespace BusinessObjects.Models
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Comment> Comments { get; set; } = null!;
         public virtual DbSet<Delivery> Deliveries { get; set; } = null!;
-        public virtual DbSet<GiftProduct> GiftProducts { get; set; } = null!;
         public virtual DbSet<Image> Images { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
         public virtual DbSet<OrderStatus> OrderStatuses { get; set; } = null!;
         public virtual DbSet<Payment> Payments { get; set; } = null!;
+        public virtual DbSet<Post> Posts { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
 
@@ -63,7 +63,9 @@ namespace BusinessObjects.Models
 
                 entity.Property(e => e.Password).HasColumnName("password");
 
-                entity.Property(e => e.Phone).HasColumnName("phone");
+                entity.Property(e => e.Phone)
+                    .IsUnicode(false)
+                    .HasColumnName("phone");
 
                 entity.Property(e => e.Point).HasColumnName("point");
 
@@ -80,17 +82,18 @@ namespace BusinessObjects.Models
             {
                 entity.ToTable("Cart");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.AccountId).HasColumnName("accountId");
+
+                entity.Property(e => e.Price)
+                    .HasColumnType("decimal(10, 0)")
+                    .HasColumnName("price");
 
                 entity.Property(e => e.ProductId).HasColumnName("productId");
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
-                entity.Property(e => e.Price)
-                   .HasColumnType("decimal(10, 0)")
-                   .HasColumnName("price");
+
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Carts)
                     .HasForeignKey(d => d.AccountId)
@@ -166,25 +169,6 @@ namespace BusinessObjects.Models
                     .WithMany(p => p.Deliveries)
                     .HasForeignKey(d => d.OrderId)
                     .HasConstraintName("FK_Delivery_Order");
-            });
-
-            modelBuilder.Entity<GiftProduct>(entity =>
-            {
-                entity.HasKey(e => e.ProductId);
-
-                entity.ToTable("GiftProduct");
-
-                entity.Property(e => e.ProductId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("productId");
-
-                entity.Property(e => e.ExchangePoint).HasColumnName("exchangePoint");
-
-                entity.HasOne(d => d.Product)
-                    .WithOne(p => p.GiftProduct)
-                    .HasForeignKey<GiftProduct>(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_GiftProduct_Product");
             });
 
             modelBuilder.Entity<Image>(entity =>
@@ -290,25 +274,80 @@ namespace BusinessObjects.Models
                 entity.Property(e => e.Method).HasColumnName("method");
             });
 
+            modelBuilder.Entity<Post>(entity =>
+            {
+                entity.ToTable("Post");
+
+                entity.Property(e => e.PostId).HasColumnName("postID");
+
+                entity.Property(e => e.Author).HasColumnName("author");
+
+                entity.Property(e => e.BriefContent)
+                    .HasMaxLength(1024)
+                    .HasColumnName("briefContent");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_date");
+
+                entity.Property(e => e.LastModified)
+                    .HasColumnType("datetime")
+                    .HasColumnName("last_modified");
+
+                entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.Property(e => e.TagSearch)
+                    .HasMaxLength(256)
+                    .HasColumnName("tagSearch");
+
+                entity.Property(e => e.Title)
+                    .HasMaxLength(256)
+                    .HasColumnName("title");
+            });
+
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.ToTable("Product");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.Age).HasColumnName("age");
+
+                entity.Property(e => e.Brand)
+                    .HasMaxLength(50)
+                    .HasColumnName("brand");
+
+                entity.Property(e => e.Capacity).HasColumnName("capacity");
+
                 entity.Property(e => e.Category).HasColumnName("category");
+
+                entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.Discount).HasColumnName("discount");
 
+                entity.Property(e => e.GiftPoint).HasColumnName("giftPoint");
+
                 entity.Property(e => e.IsAvailable).HasColumnName("isAvailable");
 
+                entity.Property(e => e.IsGift).HasColumnName("isGift");
+
+                entity.Property(e => e.IsPreorder).HasColumnName("isPreorder");
+
                 entity.Property(e => e.Name).HasColumnName("name");
+
+                entity.Property(e => e.Origin)
+                    .HasMaxLength(50)
+                    .HasColumnName("origin");
 
                 entity.Property(e => e.Price)
                     .HasColumnType("decimal(10, 0)")
                     .HasColumnName("price");
 
                 entity.Property(e => e.QuantitySold).HasColumnName("quantitySold");
+
+                entity.Property(e => e.Size)
+                    .HasMaxLength(100)
+                    .HasColumnName("size");
 
                 entity.Property(e => e.Stock).HasColumnName("stock");
 
