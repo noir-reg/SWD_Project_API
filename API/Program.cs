@@ -33,6 +33,12 @@ namespace API
             builder.Services.AddScoped<IAccountService,Services.Implementation.AccountService>();
             builder.Services.AddScoped<ICommentRepository, CommentRepository>();
             builder.Services.AddScoped<ICommentService, CommentService>();
+            builder.Services.AddScoped<IProductService,Services.Implementation.ProductService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IProductRespository, ProductRepository>();
+            builder.Services.AddScoped<IImageRopository, ImageRopository>();
+            builder.Services.AddScoped<IImageService, ImageService>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

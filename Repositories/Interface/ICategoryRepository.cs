@@ -13,5 +13,6 @@ namespace Repositories.Interface
         public bool CreateCategory(CreateCategoryRequest createCategoryRequest);
         public bool UpdateCategory(UpdateCategoryRequest updateCategoryRequest);
         public bool DeleteCategory(int id);
+        IEnumerable<CategoryResponse> GetAllCategory();
     }
 }

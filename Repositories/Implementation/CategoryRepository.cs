@@ -12,12 +12,9 @@ namespace Repositories.Implementation
 {
     public class CategoryRepository : ICategoryRepository
     {
-        private readonly MilkShopContext _context ;
+        private readonly MilkShopContext _context = new();
 
-        public CategoryRepository(MilkShopContext context)
-        {
-            _context = context;
-        }
+       
         public bool CreateCategory(CreateCategoryRequest createCategoryRequest)
         {
             var category = new Category
@@ -48,6 +45,17 @@ namespace Repositories.Implementation
                 Id = category.Id,
                 CategoryName = category.CategoryName
             };
+        }
+        public IEnumerable<CategoryResponse> GetAllCategory()
+        {
+            var categories = _context.Categories
+                .Select(c => new CategoryResponse
+                {
+                    Id = c.Id,
+                    CategoryName = c.CategoryName
+                }).ToList();
+
+            return categories;
         }
 
         public bool UpdateCategory(UpdateCategoryRequest updateCategoryRequest)

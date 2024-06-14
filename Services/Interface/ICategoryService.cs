@@ -10,8 +10,9 @@ namespace Services.Interface
     public interface ICategoryService
     {
         CategoryResponse GetCategoryById(int id);
-        bool CreateCategory(CreateCategoryRequest createCategoryRequest);
-        bool UpdateCategory(UpdateCategoryRequest updateCategoryRequest);
-        bool DeleteCategory(int id);
+        public bool CreateCategory(CreateCategoryRequest createCategoryRequest);
+        public bool UpdateCategory(UpdateCategoryRequest updateCategoryRequest);
+        public bool DeleteCategory(int id);
+        IEnumerable<CategoryResponse> GetAllCategory();
     }
 }

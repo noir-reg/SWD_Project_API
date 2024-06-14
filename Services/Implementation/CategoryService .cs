@@ -22,7 +22,10 @@ namespace Services.Implementation
         {
             return _categoryRepository.GetCategoryById(id);
         }
-
+        public IEnumerable<CategoryResponse> GetAllCategory()
+        {
+            return _categoryRepository.GetAllCategory();
+        }
         public bool CreateCategory(CreateCategoryRequest createCategoryRequest)
         {
             return _categoryRepository.CreateCategory(createCategoryRequest);

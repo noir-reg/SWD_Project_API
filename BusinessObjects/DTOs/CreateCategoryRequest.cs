@@ -9,9 +9,9 @@ namespace BusinessObjects.DTOs
 {
     public class CreateCategoryRequest
     {
-        public int Id { get; set; }
+       
         public string CategoryName { get; set; } = null!;
 
-        public virtual ICollection<Product> Products { get; set; }
+
     }
 }

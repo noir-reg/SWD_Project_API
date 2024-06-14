@@ -7,7 +7,7 @@ namespace API.Controllers
 {
   
         [ApiController]
-        [Route("api/[controller]")]
+        [Route("api/categories")]
         public class CategoryController : ControllerBase
         {
             private readonly ICategoryService _categoryService;
@@ -27,8 +27,19 @@ namespace API.Controllers
                 }
                 return NotFound("Category not found");
             }
+             [HttpGet("get-all-category")]
+            public ActionResult<IEnumerable<CategoryResponse>> GetAllCategory()
+            {
+                var categories = _categoryService.GetAllCategory();
+                if (categories == null || !categories.Any())
+                {
+                return NotFound("No categories found");
+                }
+            return Ok(categories);
+            }
 
-            [HttpPost]
+
+            [HttpPost("create-category")]
             public IActionResult CreateCategory(CreateCategoryRequest createCategoryRequest)
             {
                 if (_categoryService.CreateCategory(createCategoryRequest))
@@ -38,7 +49,7 @@ namespace API.Controllers
                 return BadRequest("Unable to create category");
             }
 
-            [HttpPut]
+            [HttpPut("update-category")]
             public IActionResult UpdateCategory(UpdateCategoryRequest updateCategoryRequest)
             {
                 if (_categoryService.UpdateCategory(updateCategoryRequest))

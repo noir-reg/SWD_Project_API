@@ -14,7 +14,18 @@ namespace API.Controllers
         {
             _productService = productService;
         }
-       
+        [HttpGet("get-all-products")]
+        public ActionResult<IEnumerable<ProductResponse>> GetAllProducts()
+        {
+            var products = _productService.GetAllProducts();
+            return Ok(products);
+        }
+        [HttpGet("get-product-by-id/{id}")]
+        public ActionResult<IEnumerable<ProductResponse>> GetProductById(int id)
+        {
+            var products = _productService.GetProductById(id);
+            return Ok(products);
+        }
         [HttpPost("create-products")]
         public IActionResult CreateProdcut(CreateProductRequest createProductRequest)
         {
@@ -64,6 +75,46 @@ namespace API.Controllers
                 return Ok(products);
             }
             return NotFound("No products found for the specified category");
+        }
+        [HttpGet("filter-by-age/{age}")]
+        public ActionResult<IEnumerable<ProductResponse>> FilterbyAge(int age)
+        {
+            var products = _productService.FilterbyAge(age);
+            return Ok(products);
+        }
+
+        [HttpGet("filter-by-brand/{brand}")]
+        public ActionResult<IEnumerable<ProductResponse>> FilterbyBrand(string brand)
+        {
+            var products = _productService.FilterbyBrand(brand);
+            return Ok(products);
+        }
+
+        [HttpGet("filter-by-origin/{origin}")]
+        public ActionResult<IEnumerable<ProductResponse>> FilterbyOrigin(string origin)
+        {
+            var products = _productService.FilterbyOrigin(origin);
+            return Ok(products);
+        }
+
+        [HttpGet("filter-by-capacity/{capacity}")]
+        public ActionResult<IEnumerable<ProductResponse>> FilterbyCapacity(int capacity)
+        {
+            var products = _productService.FilterbyCapacity(capacity);
+            return Ok(products);
+        }
+
+        [HttpGet("filter-by-size/{size}")]
+        public ActionResult<IEnumerable<ProductResponse>> FilterbySize(string size)
+        {
+            var products = _productService.FilterbySize(size);
+            return Ok(products);
+        }
+        [HttpGet("is-gift")]
+        public ActionResult<IEnumerable<ProductResponse>> IsGift()
+        {
+            var products = _productService.IsGift();
+            return Ok(products);
         }
     }
 }
