@@ -33,7 +33,7 @@ namespace API.Controllers
                 return Ok("Create product successfully");
             return BadRequest("Can not create product");
         }
-        [HttpPost("update-account")]
+        [HttpPut("update-products")]
         public IActionResult UpdateProduct(UpdateProductRequest updateProductRequest)
         {
 

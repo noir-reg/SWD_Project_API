@@ -33,7 +33,7 @@ namespace API.Controllers
                 return Ok("Create account successfully");
             return BadRequest("Can not create account");
         }
-        [HttpPost("update-account")]
+        [HttpPut("update-account")]
         public IActionResult UpdateAccount(UpdateAccountRequest updateAccountRequest)
         {
 

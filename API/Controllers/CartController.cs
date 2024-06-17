@@ -32,7 +32,7 @@ namespace API.Controllers
                 return Ok(_cartService.CreateUserCart(cart));
             return BadRequest(_cartService.CreateUserCart(cart));
         }
-        [HttpPost("update-cart")]
+        [HttpPut("update-cart")]
         public IActionResult UpdateCart(List<CartItemResponse> cart)
         {
             if (_cartService.UpdateUserCart(cart))
