@@ -26,14 +26,14 @@ namespace API.Controllers
             var products = _productService.GetProductById(id);
             return Ok(products);
         }
-        [HttpPost("create-products")]
+        [HttpPost("create-product")]
         public IActionResult CreateProdcut(CreateProductRequest createProductRequest)
         {
             if (_productService.CreateProduct(createProductRequest))
                 return Ok("Create product successfully");
             return BadRequest("Can not create product");
         }
-        [HttpPut("update-products")]
+        [HttpPut("update-product")]
         public IActionResult UpdateProduct(UpdateProductRequest updateProductRequest)
         {
 
@@ -110,7 +110,7 @@ namespace API.Controllers
             var products = _productService.FilterbySize(size);
             return Ok(products);
         }
-        [HttpGet("is-gift")]
+        [HttpGet("gift-products")]
         public ActionResult<IEnumerable<ProductResponse>> IsGift()
         {
             var products = _productService.IsGift();

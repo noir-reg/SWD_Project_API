@@ -27,7 +27,7 @@ namespace API.Controllers
                 }
                 return NotFound("Category not found");
             }
-             [HttpGet("get-all-category")]
+             [HttpGet("get-all-categories")]
             public ActionResult<IEnumerable<CategoryResponse>> GetAllCategory()
             {
                 var categories = _categoryService.GetAllCategory();
