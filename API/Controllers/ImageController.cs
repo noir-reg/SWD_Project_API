@@ -16,7 +16,7 @@ namespace API.Controllers
             _imageService = imageService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{productId}")]
         public ActionResult<IEnumerable<ImageResponse>> GetImageByProductId(int id)
         {
             var images = _imageService.GetImageByProductId(id);
