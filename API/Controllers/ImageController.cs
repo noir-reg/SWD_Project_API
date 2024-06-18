@@ -17,9 +17,9 @@ namespace API.Controllers
         }
 
         [HttpGet("{productId}")]
-        public ActionResult<IEnumerable<ImageResponse>> GetImageByProductId(int id)
+        public ActionResult<IEnumerable<ImageResponse>> GetImageByProductId(int productId)
         {
-            var images = _imageService.GetImageByProductId(id);
+            var images = _imageService.GetImageByProductId(productId);
             if (images == null || !images.Any())
                 return NotFound("No images found for the specified product ID");
 
