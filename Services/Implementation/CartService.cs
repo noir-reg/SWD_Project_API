@@ -28,9 +28,9 @@ namespace Services.Implementation
             return _repository.RemoveCartByUserId(userId);
         }
 
-        public bool RemoveCartItem(int itemId)
+        public bool RemoveCartItems(int[] itemIds)
         {
-           return (_repository.RemoveCartItem(itemId));
+           return (_repository.RemoveCartItems(itemIds));
         }
 
         public bool UpdateUserCart(List<CartItemResponse> cart)

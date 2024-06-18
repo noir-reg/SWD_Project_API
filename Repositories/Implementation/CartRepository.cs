@@ -78,13 +78,18 @@ namespace Repositories.Implementation
 
         }
 
-        public bool RemoveCartItem(int itemId)
+        public bool RemoveCartItems(int[] itemIds)
         {
-            var item = _context.Carts.Find(itemId);
-            _context.Carts.Remove(item);
-            if (_context.SaveChanges() >= 1)
-                return true;
-            return false;
+            if (itemIds.Length == 0)
+                return false;
+            foreach (var itemId in itemIds)
+            {
+                var item = _context.Carts.Find(itemId);
+                _context.Carts.Remove(item);
+                _context.SaveChanges();
+            }
+
+            return _context.SaveChanges() >= 1;
 
         }
 
@@ -95,7 +100,7 @@ namespace Repositories.Implementation
                 var currentCart = _context.Carts.Where(x => x.AccountId == cart.FirstOrDefault().AccountId)
                     .Select(x => x.Id
                     ).ToList();
-                if(currentCart==null)
+                if (currentCart == null)
                     return false;
                 foreach (var item in cart)
                 {
@@ -108,14 +113,14 @@ namespace Repositories.Implementation
                             Price = item.Price,
                             ProductId = item.ProductId
                         });
-                        
+
                     }
                     else
                     {
                         var currentItem = _context.Carts.Find(item.Id);
                         currentItem.Quantity = item.Quantity;
                         currentItem.Price = item.Price;
-                        
+
                     }
                 }
                 if (_context.SaveChanges() >= 1)

@@ -14,16 +14,17 @@ namespace API.Controllers
         {
             _cartService = cartService;
         }
-        [HttpGet("get-user-cart")] 
+        [HttpGet("get-user-cart")]
         public IActionResult GetUserCart([FromQuery] int userId)
         {
             return Ok(_cartService.GetCartByUserId(userId));
         }
-        [HttpGet("remove-item-in-cart")]
-        public IActionResult RemoveCartItem([FromQuery] int itemId)
-        {   if(_cartService.RemoveCartItem(itemId))
-            return Ok("Remove successfully");
-        return BadRequest("Can not remove");
+        [HttpGet("remove-items-in-cart")]
+        public IActionResult RemoveCartItem([FromQuery] int[] itemIds)
+        {
+            if (_cartService.RemoveCartItems(itemIds))
+                return Ok("Remove successfully");
+            return BadRequest("Can not remove");
         }
         [HttpPost("create-cart")]
         public IActionResult CreateCart(List<CartItem> cart)
@@ -40,7 +41,7 @@ namespace API.Controllers
             return BadRequest("Can not update");
         }
         [HttpGet("remove-cart")]
-        public IActionResult RemoveCart([FromQuery]int userID)
+        public IActionResult RemoveCart([FromQuery] int userID)
         {
             if (_cartService.RemoveCartByUserId(userID))
                 return Ok("Remove successfully");

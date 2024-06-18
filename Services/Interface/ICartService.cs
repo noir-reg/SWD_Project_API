@@ -13,6 +13,6 @@ namespace Services.Interface
         public bool RemoveCartByUserId(int userId);
         public CreateCartResponse CreateUserCart(List<CartItem> cart);
         public bool UpdateUserCart(List<CartItemResponse> cart);
-        public bool RemoveCartItem(int itemId);
+        public bool RemoveCartItems(int[] itemIds);
     }
 }
