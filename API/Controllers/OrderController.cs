@@ -43,5 +43,12 @@ namespace API.Controllers
                 return Ok("Update order status successfully");
             return BadRequest("Can not update order status");
         }
+        [HttpGet("confirm-order")]
+        public IActionResult ConfirmOrder([FromQuery] int orderId)
+        {
+            if (_orderService.ConfirmOrder(orderId))
+                return Ok("Confirm order successfully");
+            return BadRequest("Can not confirm order");
+        }
     }
 }

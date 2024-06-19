@@ -128,7 +128,7 @@ namespace Repositories.Implementation
         public bool UpdateAccountPoint(int accountId, int point)
         {
             var acc = _context.Accounts.Where(x => x.Id == accountId).FirstOrDefault();
-            acc.Point = point;
+            acc.Point += point;
             if (_context.SaveChanges() >= 1)
                 return true;
             return false;

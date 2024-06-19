@@ -14,5 +14,6 @@ namespace Services.Interface
         public bool UpdateOrderStatus(int orderId, int? staffId, string status);
         public OrderResponse GetOrderById(int id);
         public List<OrderResponse> GetOrders(string? status);
+        public bool ConfirmOrder(int orderId);
     }
 }

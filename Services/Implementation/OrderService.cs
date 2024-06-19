@@ -16,7 +16,12 @@ namespace Services.Implementation
             _orderRepository = orderRepository;
         }
 
-            public CreateOrderResponse CreateOrder(CreateOrderRequest createOrderRequest)
+        public bool ConfirmOrder(int orderId)
+        {
+            return _orderRepository.ConfirmOrder(orderId);
+        }
+
+        public CreateOrderResponse CreateOrder(CreateOrderRequest createOrderRequest)
         {
           return  _orderRepository.CreateOrder(createOrderRequest);
         }

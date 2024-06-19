@@ -153,4 +153,13 @@ public class OrderRepository : IOrderRepository
             return true;
         return false;
     }
+    public bool ConfirmOrder(int orderId)
+    {
+        var order = _context.Orders.Include(x => x.OrderStatuses).FirstOrDefault(x => x.Id == orderId);
+        order.OrderStatuses.FirstOrDefault().OrderStatus1 = "Delivered";
+        
+        if (_context.SaveChanges() >= 1)
+            return true;
+        return false;
+    }
 }
