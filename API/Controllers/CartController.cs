@@ -29,9 +29,9 @@ namespace API.Controllers
         [HttpPost("create-cart")]
         public IActionResult CreateCart(List<CartItem> cart)
         {
-            if (_cartService.CreateUserCart(cart).IsSuccess)
-                return Ok(_cartService.CreateUserCart(cart));
-            return BadRequest(_cartService.CreateUserCart(cart));
+            if (_cartService.CreateUserCart(cart) == true) 
+                return Ok("Create successfully");
+            return BadRequest("Can not create because you have already had a cart or the request is in valid");
         }
         [HttpPut("update-cart")]
         public IActionResult UpdateCart(List<CartItemResponse> cart)

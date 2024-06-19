@@ -13,7 +13,7 @@ namespace Services.Implementation
     public class CartService : ICartService
     {   private readonly ICartRepository _repository;
         public CartService(ICartRepository repository) {  _repository = repository; }
-        public CreateCartResponse CreateUserCart(List<CartItem> cart)
+        public bool CreateUserCart(List<CartItem> cart)
         {
            return _repository.CreateUserCart(cart);
         }

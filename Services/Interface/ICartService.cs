@@ -11,7 +11,7 @@ namespace Services.Interface
     {
         public List<CartItemResponse> GetCartByUserId(int userId);
         public bool RemoveCartByUserId(int userId);
-        public CreateCartResponse CreateUserCart(List<CartItem> cart);
+        public bool CreateUserCart(List<CartItem> cart);
         public bool UpdateUserCart(List<CartItemResponse> cart);
         public bool RemoveCartItems(int[] itemIds);
     }

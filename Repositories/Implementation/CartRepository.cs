@@ -3,9 +3,12 @@ using BusinessObjects.Models;
 using Repositories.Interface;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Repositories.Implementation
 {
@@ -13,48 +16,44 @@ namespace Repositories.Implementation
     {
         private readonly MilkShopContext _context = new();
 
-        public CreateCartResponse CreateUserCart(List<CartItem> cart)
+        public bool CreateUserCart(List<CartItem> cart)
         {
+
+
             try
             {
-                if (_context.Carts.FirstOrDefault(x => x.AccountId == cart.FirstOrDefault().AccountId) != null)
-                {
-                    return new CreateCartResponse
-                    {
-                        IsSuccess = false,
-                        Message = "You have already had a cart. Remove or submit an order for this cart before create a new one"
-                    };
-                }
-
+                var currentCart = _context.Carts.Where(x => x.AccountId == cart.FirstOrDefault().AccountId)
+                    .Select(x => x.Id
+                    ).ToList();
+                if (currentCart.Any())
+                    return false;
                 foreach (var item in cart)
                 {
+
                     _context.Carts.Add(new Cart
                     {
                         Quantity = item.Quantity,
                         AccountId = item.AccountId,
                         Price = item.Price,
-                        ProductId = item.ProductId,
+                        ProductId = item.ProductId
                     });
+
+
+
                 }
                 if (_context.SaveChanges() >= 1)
-                {
-                    return new CreateCartResponse
-                    {
-                        IsSuccess = true,
-                        Message = "Create successfully"
-                    };
-                }
+                    return true;
             }
             catch (Exception ex)
             {
                 _context.Database.RollbackTransaction();
             }
-            return new CreateCartResponse
-            {
-                IsSuccess = false,
-                Message = "Can not create cart"
-            };
+            return false;
+
+
+
         }
+
 
         public List<CartItemResponse> GetCartByUserId(int userId)
         {
@@ -85,8 +84,9 @@ namespace Repositories.Implementation
             foreach (var itemId in itemIds)
             {
                 var item = _context.Carts.Find(itemId);
-                _context.Carts.Remove(item);
-                _context.SaveChanges();
+                if (item != null)
+                    _context.Carts.Remove(item);
+
             }
 
             return _context.SaveChanges() >= 1;
@@ -100,7 +100,7 @@ namespace Repositories.Implementation
                 var currentCart = _context.Carts.Where(x => x.AccountId == cart.FirstOrDefault().AccountId)
                     .Select(x => x.Id
                     ).ToList();
-                if (currentCart == null)
+                if (!currentCart.Any())
                     return false;
                 foreach (var item in cart)
                 {
@@ -132,5 +132,7 @@ namespace Repositories.Implementation
             }
             return false;
         }
+
+
     }
 }
