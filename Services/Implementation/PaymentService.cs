@@ -59,6 +59,7 @@ public class PaymentService : IPaymentService
         {
             var service = new ChargeService();
             var charge = service.Get(paymentId);
+            
             return new PaymentInfo
             {
                 PaymentId = charge.Id,
