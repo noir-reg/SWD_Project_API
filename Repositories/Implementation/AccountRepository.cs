@@ -112,13 +112,13 @@ namespace Repositories.Implementation
             var acc = _context.Accounts.Where(x => x.Id == updateAccountRequest.Id).FirstOrDefault();
             if (acc == null)
                 return false;
-            acc.Address = updateAccountRequest.Address == null ? acc.Address : updateAccountRequest.Address;
-            acc.Birthday = updateAccountRequest.Birthday == null ? acc.Birthday : updateAccountRequest.Birthday;
-            acc.Fullname = updateAccountRequest.Fullname == null ? acc.Fullname : updateAccountRequest.Fullname;
-            acc.Gender = updateAccountRequest.Gender == null ? acc.Gender : updateAccountRequest.Gender;
-            acc.IsActive = (bool)(updateAccountRequest.IsActive == null ? acc.IsActive : updateAccountRequest.IsActive);
-            acc.Password = updateAccountRequest.Password;
-            acc.Phone = updateAccountRequest.Phone;
+            acc.Address = updateAccountRequest.Address ?? acc.Address;
+            acc.Birthday = updateAccountRequest.Birthday ?? acc.Birthday;
+            acc.Fullname = updateAccountRequest.Fullname ?? acc.Fullname;
+            acc.Gender = updateAccountRequest.Gender ?? acc.Gender;
+            acc.IsActive = (bool)(updateAccountRequest.IsActive ?? acc.IsActive);
+            acc.Password = updateAccountRequest.Password ?? acc.Password;
+            acc.Phone = updateAccountRequest.Phone ?? acc.Phone;
             if (_context.SaveChanges() >= 1)
                 return true;
             return false;
@@ -127,8 +127,10 @@ namespace Repositories.Implementation
 
         public bool UpdateAccountPoint(int accountId, int point)
         {
-            var acc = _context.Accounts.Where(x => x.Id == accountId).FirstOrDefault();
+            var acc = _context.Accounts.FirstOrDefault(x => x.Id == accountId);
             acc.Point += point;
+            if (acc.Point < 0)
+                return false;
             if (_context.SaveChanges() >= 1)
                 return true;
             return false;
