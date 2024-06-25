@@ -136,7 +136,7 @@ namespace Repositories.Implementation
         public bool DeleteProduct(int id)
         {
             
-                var acc = _context.Products.Where(x => x.Id == id).FirstOrDefault();
+                var acc = _context.Products.Where(x => x.Id == id).Include(x=>x.Images).Include(x=>x.Carts).Include(x => x.Comments).FirstOrDefault();
                 if (acc == null)
                     return false; // Return false if the product is not found
 

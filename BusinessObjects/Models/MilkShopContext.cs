@@ -101,7 +101,7 @@ namespace BusinessObjects.Models
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.Carts)
-                    .HasForeignKey(d => d.ProductId)
+                    .HasForeignKey(d => d.ProductId).OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Cart_Product");
             });
 
@@ -140,7 +140,7 @@ namespace BusinessObjects.Models
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Comment_Product");
 
                 entity.HasOne(d => d.User)
@@ -184,7 +184,7 @@ namespace BusinessObjects.Models
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.Images)
                     .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Image_Product");
             });
 
@@ -353,7 +353,7 @@ namespace BusinessObjects.Models
 
                 entity.HasOne(d => d.CategoryNavigation)
                     .WithMany(p => p.Products)
-                    .HasForeignKey(d => d.Category)
+                    .HasForeignKey(d => d.Category).OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Product_Category");
             });
 

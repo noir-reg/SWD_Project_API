@@ -28,7 +28,7 @@ namespace Repositories.Implementation
 
         public bool DeleteCategory(int id)
         {
-            var category = _context.Categories.Find(id);
+            var category = _context.Categories.Include(x=>x.Products).Where(x=>x.Id==id).FirstOrDefault();
             if (category == null) return false;
 
             _context.Categories.Remove(category);
