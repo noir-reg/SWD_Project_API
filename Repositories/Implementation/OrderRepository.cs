@@ -22,7 +22,6 @@ public class OrderRepository : IOrderRepository
             {
                 CustomerId = createOrderRequest.CustomerId,
                 PaymentId = createOrderRequest.PaymentId,
-                StaffId = createOrderRequest.StaffId,
                 Total = createOrderRequest.Total
             });
             if (_context.SaveChanges() <= 0)
