@@ -53,7 +53,7 @@ namespace Repositories.Implementation
                 Category = x.Category,
                 Stock = x.Stock,
                 IsAvailable = x.IsAvailable,
-                QuantitySold = x.QuantitySold ,
+                QuantitySold = x.QuantitySold,
                 Image = x.Image,
                 Age = x.Age,
                 Size = x.Size,
@@ -63,12 +63,13 @@ namespace Repositories.Implementation
                 IsPreorder = x.IsPreorder,
                 IsGift = x.IsGift,
                 GiftPoint = x.GiftPoint,
-                Capacity = x.Capacity
+                Capacity = x.Capacity,
+                OnDiscountPrice = (x.Price)*(1- (decimal)x.Discount/100)
 
 
             }).FirstOrDefault();
         }
-     
+
         public bool UpdateProduct(UpdateProductRequest updateProductRequest)
         {
             var product = _context.Products.FirstOrDefault(x => x.Id == updateProductRequest.Id);
@@ -135,43 +136,44 @@ namespace Repositories.Implementation
         }
         public bool DeleteProduct(int id)
         {
-            
-                var acc = _context.Products.Where(x => x.Id == id).Include(x=>x.Images).Include(x=>x.Carts).Include(x => x.Comments).FirstOrDefault();
-                if (acc == null)
-                    return false; // Return false if the product is not found
 
-                _context.Products.Remove(acc);
+            var acc = _context.Products.Where(x => x.Id == id).Include(x => x.Images).Include(x => x.Carts).Include(x => x.Comments).FirstOrDefault();
+            if (acc == null)
+                return false; // Return false if the product is not found
 
-                return _context.SaveChanges() >= 1;
-            
+            _context.Products.Remove(acc);
+
+            return _context.SaveChanges() >= 1;
+
 
         }
-          public IEnumerable<ProductResponse> SearchProducts(string keyword)
-    {
-        return _context.Products
-            .Where(p => p.Name.Contains(keyword) || p.CategoryNavigation.CategoryName.Contains(keyword))
-            .Select(p => new ProductResponse
-            {
-                Id = p.Id,
-                Name = p.Name,
-                Price = p.Price,
-                Discount = p.Discount,
-                Category = p.Category,
-                Stock = p.Stock,
-                IsAvailable = p.IsAvailable,
-                QuantitySold = p.QuantitySold,
-                Image = p.Image,
-                Age = p.Age,
-                Size = p.Size,
-                Description = p.Description,
-                Brand = p.Brand,
-                Origin = p.Origin,
-                IsPreorder = p.IsPreorder,
-                IsGift = p.IsGift,
-                GiftPoint = p.GiftPoint,
-                Capacity = p.Capacity
-            }).ToList();
-    }
+        public IEnumerable<ProductResponse> SearchProducts(string keyword)
+        {
+            return _context.Products
+                .Where(p => p.Name.Contains(keyword) || p.CategoryNavigation.CategoryName.Contains(keyword))
+                .Select(p => new ProductResponse
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = p.Price,
+                    Discount = p.Discount,
+                    Category = p.Category,
+                    Stock = p.Stock,
+                    IsAvailable = p.IsAvailable,
+                    QuantitySold = p.QuantitySold,
+                    Image = p.Image,
+                    Age = p.Age,
+                    Size = p.Size,
+                    Description = p.Description,
+                    Brand = p.Brand,
+                    Origin = p.Origin,
+                    IsPreorder = p.IsPreorder,
+                    IsGift = p.IsGift,
+                    GiftPoint = p.GiftPoint,
+                    Capacity = p.Capacity,
+                    OnDiscountPrice = (p.Price) * (1 - (decimal)p.Discount / 100)
+                }).ToList();
+        }
         public IEnumerable<ProductResponse> GetProductsByQuantitySold(int topN)
         {
             return _context.Products
@@ -198,7 +200,8 @@ namespace Repositories.Implementation
                     IsPreorder = p.IsPreorder,
                     IsGift = p.IsGift,
                     GiftPoint = p.GiftPoint,
-                    Capacity = p.Capacity
+                    Capacity = p.Capacity,
+                    OnDiscountPrice = (p.Price) * (1 - (decimal)p.Discount / 100)
                 }).ToList();
         }
         public IEnumerable<ProductResponse> GetProductsByCategory(int categoryId)
@@ -225,7 +228,8 @@ namespace Repositories.Implementation
                     IsPreorder = p.IsPreorder,
                     IsGift = p.IsGift,
                     GiftPoint = p.GiftPoint,
-                    Capacity = p.Capacity
+                    Capacity = p.Capacity,
+                    OnDiscountPrice = (p.Price) * (1 - (decimal)p.Discount / 100)
                 }).ToList();
         }
         public IEnumerable<ProductResponse> FilterbyCapacity(int CapacityID)
@@ -234,25 +238,26 @@ namespace Repositories.Implementation
                .Where(p => p.Capacity == CapacityID && p.IsAvailable != 0) // Add condition for IsAvailable
                .Select(p => new ProductResponse
                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Price = p.Price,
-                    Discount = p.Discount,
-                    Category = p.Category,
-                    Stock = p.Stock,
-                    IsAvailable = p.IsAvailable,
-                    QuantitySold = p.QuantitySold,
-                    Image = p.Image,
-                    Age = p.Age,
-                    Size = p.Size,
-                    Description = p.Description,
-                    Brand = p.Brand,
-                    Origin = p.Origin,
-                    IsPreorder = p.IsPreorder,
-                    IsGift = p.IsGift,
-                    GiftPoint = p.GiftPoint,
-                    Capacity = p.Capacity
-                }).ToList();
+                   Id = p.Id,
+                   Name = p.Name,
+                   Price = p.Price,
+                   Discount = p.Discount,
+                   Category = p.Category,
+                   Stock = p.Stock,
+                   IsAvailable = p.IsAvailable,
+                   QuantitySold = p.QuantitySold,
+                   Image = p.Image,
+                   Age = p.Age,
+                   Size = p.Size,
+                   Description = p.Description,
+                   Brand = p.Brand,
+                   Origin = p.Origin,
+                   IsPreorder = p.IsPreorder,
+                   IsGift = p.IsGift,
+                   GiftPoint = p.GiftPoint,
+                   Capacity = p.Capacity,
+                   OnDiscountPrice = (p.Price) * (1 - (decimal)p.Discount / 100)
+               }).ToList();
         }
         public IEnumerable<ProductResponse> FilterbyAge(int AgeID)
         {
@@ -260,25 +265,26 @@ namespace Repositories.Implementation
                .Where(p => p.Age == AgeID && p.IsAvailable != 0) // Add condition for IsAvailable
                .Select(p => new ProductResponse
                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Price = p.Price,
-                    Discount = p.Discount,
-                    Category = p.Category,
-                    Stock = p.Stock,
-                    IsAvailable = p.IsAvailable,
-                    QuantitySold = p.QuantitySold,
-                    Image = p.Image,
-                    Age = p.Age,
-                    Size = p.Size,
-                    Description = p.Description,
-                    Brand = p.Brand,
-                    Origin = p.Origin,
-                    IsPreorder = p.IsPreorder,
-                    IsGift = p.IsGift,
-                    GiftPoint = p.GiftPoint,
-                    Capacity = p.Capacity
-                }).ToList();
+                   Id = p.Id,
+                   Name = p.Name,
+                   Price = p.Price,
+                   Discount = p.Discount,
+                   Category = p.Category,
+                   Stock = p.Stock,
+                   IsAvailable = p.IsAvailable,
+                   QuantitySold = p.QuantitySold,
+                   Image = p.Image,
+                   Age = p.Age,
+                   Size = p.Size,
+                   Description = p.Description,
+                   Brand = p.Brand,
+                   Origin = p.Origin,
+                   IsPreorder = p.IsPreorder,
+                   IsGift = p.IsGift,
+                   GiftPoint = p.GiftPoint,
+                   Capacity = p.Capacity,
+                   OnDiscountPrice = (p.Price) * (1 - (decimal)p.Discount / 100)
+               }).ToList();
         }
         public IEnumerable<ProductResponse> FilterbyBrand(string BrandID)
         {
@@ -303,7 +309,8 @@ namespace Repositories.Implementation
                    IsPreorder = p.IsPreorder,
                    IsGift = p.IsGift,
                    GiftPoint = p.GiftPoint,
-                   Capacity = p.Capacity
+                   Capacity = p.Capacity,
+                   OnDiscountPrice = (p.Price) * (1 - (decimal)p.Discount / 100)
                }).ToList();
         }
         public IEnumerable<ProductResponse> FilterbyOrigin(string OriginID)
@@ -329,7 +336,8 @@ namespace Repositories.Implementation
                    IsPreorder = p.IsPreorder,
                    IsGift = p.IsGift,
                    GiftPoint = p.GiftPoint,
-                   Capacity = p.Capacity
+                   Capacity = p.Capacity,
+                   OnDiscountPrice = (p.Price) * (1 - (decimal)p.Discount / 100)
                }).ToList();
         }
         public IEnumerable<ProductResponse> FilterbySize(string SizeID)
@@ -355,7 +363,8 @@ namespace Repositories.Implementation
                    IsPreorder = p.IsPreorder,
                    IsGift = p.IsGift,
                    GiftPoint = p.GiftPoint,
-                   Capacity = p.Capacity
+                   Capacity = p.Capacity,
+                   OnDiscountPrice = (p.Price) * (1 - (decimal)p.Discount / 100)
                }).ToList();
         }
         public IEnumerable<ProductResponse> GetAllProducts()
@@ -381,7 +390,8 @@ namespace Repositories.Implementation
                      IsPreorder = p.IsPreorder,
                      IsGift = p.IsGift,
                      GiftPoint = p.GiftPoint,
-                     Capacity = p.Capacity
+                     Capacity = p.Capacity,
+                     OnDiscountPrice = (p.Price) * (1 - (decimal)p.Discount / 100)
                  }).ToList();
         }
         public IEnumerable<ProductResponse> IsGift()
@@ -407,7 +417,8 @@ namespace Repositories.Implementation
                  IsPreorder = p.IsPreorder,
                  IsGift = p.IsGift,
                  GiftPoint = p.GiftPoint,
-                 Capacity = p.Capacity
+                 Capacity = p.Capacity,
+                 OnDiscountPrice = (p.Price) * (1 - (decimal)p.Discount / 100)
              }).ToList();
 
 
