@@ -19,8 +19,8 @@ namespace API.Controllers
         {
             return Ok(_cartService.GetCartByUserId(userId));
         }
-        [HttpGet("remove-items-in-cart")]
-        public IActionResult RemoveCartItem([FromQuery] int[] itemIds)
+        [HttpPost("remove-items-in-cart")]
+        public IActionResult RemoveCartItem([FromBody] int[] itemIds)
         {
             if (_cartService.RemoveCartItems(itemIds))
                 return Ok("Remove successfully");
