@@ -7,9 +7,9 @@ namespace API.Controllers
 {
     [Route("api/products")]
     [ApiController]
-    public class ProductController : ControllerBase 
+    public class ProductController : ControllerBase
     {
-        private readonly IProductService _productService;   
+        private readonly IProductService _productService;
         public ProductController(IProductService productService)
         {
             _productService = productService;
@@ -24,7 +24,9 @@ namespace API.Controllers
         public ActionResult<IEnumerable<ProductResponse>> GetProductById(int id)
         {
             var products = _productService.GetProductById(id);
-            return Ok(products);
+            if (products != null)
+                return Ok(products);
+            return NotFound("Product is not found");
         }
         [HttpPost("create-product")]
         public IActionResult CreateProdcut(CreateProductRequest createProductRequest)
