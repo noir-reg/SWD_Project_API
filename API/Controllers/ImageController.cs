@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
@@ -25,7 +26,7 @@ namespace API.Controllers
 
             return Ok(images);
         }
-
+        [Authorize(Roles = "staff")]
         [HttpPost("create")]
         public ActionResult CreateImage([FromBody] CreateImageRequest createImageRequest)
         {
@@ -35,7 +36,7 @@ namespace API.Controllers
 
             return Ok("Image created successfully");
         }
-
+        [Authorize(Roles = "staff")]
         [HttpPut("update")]
         public ActionResult UpdateImage( [FromBody] UpdateImageRequest updateImageRequest)
         {

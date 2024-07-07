@@ -1,73 +1,74 @@
 ﻿using BusinessObjects.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
 
 namespace API.Controllers
 {
-  
-        [ApiController]
-        [Route("api/categories")]
-        public class CategoryController : ControllerBase
+
+    [ApiController]
+    [Route("api/categories")]
+    public class CategoryController : ControllerBase
+    {
+        private readonly ICategoryService _categoryService;
+
+        public CategoryController(ICategoryService categoryService)
         {
-            private readonly ICategoryService _categoryService;
+            _categoryService = categoryService;
+        }
 
-            public CategoryController(ICategoryService categoryService)
+        [HttpGet("{id}")]
+        public IActionResult GetCategoryById(int id)
+        {
+            var category = _categoryService.GetCategoryById(id);
+            if (category != null)
             {
-                _categoryService = categoryService;
+                return Ok(category);
             }
-
-            [HttpGet("{id}")]
-            public IActionResult GetCategoryById(int id)
+            return NotFound("Category not found");
+        }
+        [HttpGet("get-all-categories")]
+        public ActionResult<IEnumerable<CategoryResponse>> GetAllCategory()
+        {
+            var categories = _categoryService.GetAllCategory();
+            if (categories == null || !categories.Any())
             {
-                var category = _categoryService.GetCategoryById(id);
-                if (category != null)
-                {
-                    return Ok(category);
-                }
-                return NotFound("Category not found");
-            }
-             [HttpGet("get-all-categories")]
-            public ActionResult<IEnumerable<CategoryResponse>> GetAllCategory()
-            {
-                var categories = _categoryService.GetAllCategory();
-                if (categories == null || !categories.Any())
-                {
                 return NotFound("No categories found");
-                }
+            }
             return Ok(categories);
-            }
+        }
 
-
-            [HttpPost("create-category")]
-            public IActionResult CreateCategory(CreateCategoryRequest createCategoryRequest)
+        [Authorize(Roles = "staff")]
+        [HttpPost("create-category")]
+        public IActionResult CreateCategory(CreateCategoryRequest createCategoryRequest)
+        {
+            if (_categoryService.CreateCategory(createCategoryRequest))
             {
-                if (_categoryService.CreateCategory(createCategoryRequest))
-                {
-                    return Ok("Category created successfully");
-                }
-                return BadRequest("Unable to create category");
+                return Ok("Category created successfully");
             }
-
-            [HttpPut("update-category")]
-            public IActionResult UpdateCategory(UpdateCategoryRequest updateCategoryRequest)
+            return BadRequest("Unable to create category");
+        }
+        [Authorize(Roles = "staff")]
+        [HttpPut("update-category")]
+        public IActionResult UpdateCategory(UpdateCategoryRequest updateCategoryRequest)
+        {
+            if (_categoryService.UpdateCategory(updateCategoryRequest))
             {
-                if (_categoryService.UpdateCategory(updateCategoryRequest))
-                {
-                    return Ok("Category updated successfully");
-                }
-                return NotFound("Category not found");
+                return Ok("Category updated successfully");
             }
-
-            [HttpDelete("{id}")]
-            public IActionResult DeleteCategory(int id)
+            return NotFound("Category not found");
+        }
+        [Authorize(Roles = "staff")]
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCategory(int id)
+        {
+            if (_categoryService.DeleteCategory(id))
             {
-                if (_categoryService.DeleteCategory(id))
-                {
-                    return Ok("Category deleted successfully");
-                }
-                return NotFound("Category not found");
+                return Ok("Category deleted successfully");
             }
+            return NotFound("Category not found");
         }
     }
+}
 

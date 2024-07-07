@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -28,6 +29,7 @@ namespace API.Controllers
                 return Ok(products);
             return NotFound("Product is not found");
         }
+        [Authorize(Roles = "staff")]
         [HttpPost("create-product")]
         public IActionResult CreateProdcut(CreateProductRequest createProductRequest)
         {
@@ -35,6 +37,7 @@ namespace API.Controllers
                 return Ok("Create product successfully");
             return BadRequest("Can not create product");
         }
+        [Authorize(Roles = "staff")]
         [HttpPut("update-product")]
         public IActionResult UpdateProduct(UpdateProductRequest updateProductRequest)
         {
@@ -43,6 +46,7 @@ namespace API.Controllers
                 return Ok("Update product successfully");
             return BadRequest("Can not update product");
         }
+        [Authorize(Roles = "staff")]
         [HttpDelete("delete-product/{id}")]
         public IActionResult DeleteProduct(int id)
         {
