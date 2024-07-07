@@ -44,7 +44,7 @@ namespace Repositories.Implementation
                 existingComment.UserId = comment.UserId;
                 existingComment.ProductId = comment.ProductId;
                 existingComment.Content = comment.Content;
-                existingComment.CommentDate = comment.CommentDate;
+                existingComment.CommentDate = DateTime.Now;
                 existingComment.Rate = comment.Rate;
                 existingComment.Status = comment.Status;
                 await _context.SaveChangesAsync();

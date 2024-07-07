@@ -43,7 +43,7 @@ namespace Services.Implementation
                 UserId = commentDTO.UserId,
                 ProductId = commentDTO.ProductId,
                 Content = commentDTO.Content,
-                CommentDate = commentDTO.CommentDate,
+                CommentDate = DateTime.Now,
                 Rate = commentDTO.Rate,
                 Status = commentDTO.Status
             };
@@ -59,7 +59,6 @@ namespace Services.Implementation
                 comment.UserId = commentDTO.UserId;
                 comment.ProductId = commentDTO.ProductId;
                 comment.Content = commentDTO.Content;
-                comment.CommentDate = commentDTO.CommentDate;
                 comment.Rate = commentDTO.Rate;
                 comment.Status = commentDTO.Status;
                 await _commentRepository.UpdateCommentAsync(id, comment);
