@@ -10,7 +10,8 @@ namespace BusinessObjects.Models
             Carts = new HashSet<Cart>();
             Comments = new HashSet<Comment>();
             Deliveries = new HashSet<Delivery>();
-            Orders = new HashSet<Order>();
+            OrderCustomers = new HashSet<Order>();
+            OrderStaffs = new HashSet<Order>();
         }
 
         public int Id { get; set; }
@@ -29,6 +30,7 @@ namespace BusinessObjects.Models
         public virtual ICollection<Cart> Carts { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Delivery> Deliveries { get; set; }
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Order> OrderCustomers { get; set; }
+        public virtual ICollection<Order> OrderStaffs { get; set; }
     }
 }

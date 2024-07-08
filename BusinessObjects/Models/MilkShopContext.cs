@@ -221,9 +221,15 @@ namespace BusinessObjects.Models
                     .HasConstraintName("FK_Order_Payment");
 
                 entity.HasOne(d => d.Staff)
-                    .WithMany(p => p.Orders)
+                    .WithMany(p => p.OrderStaffs)
                     .HasForeignKey(d => d.StaffId)
                     .HasConstraintName("FK_Order_Account");
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.OrderCustomers)
+                    .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Order_Account1");
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>

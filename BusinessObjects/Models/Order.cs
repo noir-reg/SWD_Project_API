@@ -18,6 +18,7 @@ namespace BusinessObjects.Models
         public int? PaymentId { get; set; }
         public decimal? Total { get; set; }
 
+        public virtual Account Customer { get; set; } = null!;
         public virtual Payment? Payment { get; set; }
         public virtual Account? Staff { get; set; }
         public virtual ICollection<Delivery> Deliveries { get; set; }
