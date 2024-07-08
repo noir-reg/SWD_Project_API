@@ -46,7 +46,6 @@ namespace API.Controllers
             commentDTO.UserId = createCommentDTO.UserId;
             commentDTO.ProductId = createCommentDTO.ProductId;
             commentDTO.Content = createCommentDTO.Content;
-            commentDTO.CommentDate = createCommentDTO.CommentDate;
             commentDTO.Rate = createCommentDTO.Rate;
             commentDTO.Status = createCommentDTO.Status;
             var comment = await _commentService.CreateCommentAsync(commentDTO);

@@ -14,17 +14,17 @@ namespace BusinessObjects.DTOs
             this.Content = cmt.Content;
             this.UserId = cmt.UserId;
             this.ProductId = cmt.ProductId;
-            this.CommentDate = cmt.CommentDate;
             this.Rate   = cmt.Rate;
             this.Status = cmt.Status;
+            this.Username = cmt.User.Fullname;
         }
         public CommentDTO() { }
         
         public int Id { get; set; }
         public int UserId { get; set; }
+        public string Username { get; set; }
         public int ProductId { get; set; }
         public string Content { get; set; } = null!;
-        public DateTime CommentDate { get; set; }
         public int Rate { get; set; }
         public bool? Status { get; set; }
     }
