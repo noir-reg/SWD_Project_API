@@ -15,7 +15,7 @@ namespace Repositories.Implementation
 
         public async Task<IEnumerable<Comment>> GetCommentsAsync()
         {
-            return await _context.Comments.ToListAsync();
+            return await _context.Comments.Include(x=>x.User).ToListAsync();
         }
 
         public async Task<Comment> GetCommentAsync(int id)
@@ -25,7 +25,7 @@ namespace Repositories.Implementation
         public async Task<IEnumerable<Comment>> GetCommentsByProductIDAsync(int productID)
         {
             return await _context.Comments
-                .Where(c => c.ProductId == productID)
+                .Where(c => c.ProductId == productID).Include(x => x.User)
                 .ToListAsync();
         }
 
