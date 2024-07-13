@@ -29,7 +29,10 @@ namespace Repositories.Implementation
                     return false;
                 foreach (var item in cart)
                 {
-
+                    if (item.Quantity==0)
+                    {
+                        return false;
+                    }
                     _context.Carts.Add(new Cart
                     {
                         Quantity = item.Quantity,
@@ -104,6 +107,10 @@ namespace Repositories.Implementation
                     return false;
                 foreach (var item in cart)
                 {
+                    if (item.Quantity == 0)
+                    {
+                        return false;
+                    }
                     if (!currentCart.Contains(item.Id))
                     {
                         _context.Carts.Add(new Cart
