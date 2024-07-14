@@ -62,6 +62,8 @@ namespace Repositories.Implementation
             var acc = _context.Accounts.Include(x => x.Role).FirstOrDefault(x => x.Email.ToLower().Equals(email.ToLower())&&x.Roleid==1);
             if (acc != null)
             {
+                if (!acc.IsActive)
+                    return null;
                 JWTUtils jwt = new(_config);
                 var token = jwt.GenerateToken(acc.Role.Name);
                 return new LoginResponse
@@ -93,7 +95,7 @@ namespace Repositories.Implementation
                 });
                 if (_context.SaveChanges() >= 1)
                 {
-                    var newAcc = _context.Accounts.Include(x => x.Role).FirstOrDefault(x => x.Email.ToLower().Equals(email.ToLower()));
+                    var newAcc = _context.Accounts.Include(x => x.Role).FirstOrDefault(x => x.Email.ToLower().Equals(email.ToLower())&&x.IsActive);
                     JWTUtils jwt = new(_config);
                     var token = jwt.GenerateToken(newAcc.Role.Name);
                     return new LoginResponse
