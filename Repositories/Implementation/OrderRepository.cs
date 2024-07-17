@@ -16,21 +16,20 @@ public class OrderRepository : IOrderRepository
     private readonly MilkShopContext _context = new();
 
     public CreateOrderResponse CreateOrder(CreateOrderRequest createOrderRequest)
-    {
+    { // Create new order
+         
+        
         using var transaction = _context.Database.BeginTransaction();
         try
         {
-            // Create new order
             var newOrder = new Order
             {
                 CustomerId = createOrderRequest.CustomerId,
                 PaymentId = createOrderRequest.PaymentId,
                 Total = createOrderRequest.Total
             };
-
             _context.Orders.Add(newOrder);
-            _context.SaveChanges(); // Save the order first to generate the new order ID
-
+            _context.SaveChanges();
             // Add order status
             var newOrderStatus = new OrderStatus
             {
@@ -73,14 +72,15 @@ public class OrderRepository : IOrderRepository
 
             //transaction.Commit();
             
-            transaction.Commit();
-            
+            transaction.CommitAsync();
+           
             return new CreateOrderResponse { OrederId = newOrder.Id - 1 };
         }
         catch (Exception)
         {
-            //transaction.Rollback();
-            throw;
+            transaction.Rollback();
+            
+            return null;
         }
     }
 

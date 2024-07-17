@@ -36,7 +36,7 @@ public class PaymentService : IPaymentService
                     PaymentMethod = charge.PaymentMethod,
                     Amount = charge.Amount,
                     Currency = charge.Currency,
-                    CustomerId = charge.CustomerId,
+                   // CustomerId = charge.CustomerId,
                     Status = charge.Status
                 },
                 isSuccess = true,
@@ -66,7 +66,7 @@ public class PaymentService : IPaymentService
                 PaymentMethod = charge.PaymentMethod,
                 Amount = charge.Amount,
                 Currency = charge.Currency,
-                CustomerId = charge.CustomerId,
+               // CustomerId = charge.CustomerId,
                 Status = charge.Status
             };
         }
@@ -87,7 +87,7 @@ public class PaymentService : IPaymentService
                 PaymentMethod = x.PaymentMethod,
                 Amount = x.Amount,
                 Currency = x.Currency,
-                CustomerId = x.CustomerId,
+                //CustomerId = x.CustomerId,
                 Status = x.Status
             }).ToList();
             return charges;
