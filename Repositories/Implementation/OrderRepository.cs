@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Repositories.Interface;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,69 +14,82 @@ namespace Repositories.Implementation;
 public class OrderRepository : IOrderRepository
 {
     private readonly MilkShopContext _context = new();
+
     public CreateOrderResponse CreateOrder(CreateOrderRequest createOrderRequest)
     {
-
+        using var transaction = _context.Database.BeginTransaction();
         try
         {
-            var order = _context.Orders.Add(new Order
+            // Create new order
+            var newOrder = new Order
             {
                 CustomerId = createOrderRequest.CustomerId,
                 PaymentId = createOrderRequest.PaymentId,
                 Total = createOrderRequest.Total
-            });
-            if (_context.SaveChanges() <= 0)
-                return null;
-            _context.OrderStatuses.Add(new OrderStatus
+            };
+
+            _context.Orders.Add(newOrder);
+            _context.SaveChanges(); // Save the order first to generate the new order ID
+
+            // Add order status
+            var newOrderStatus = new OrderStatus
             {
-                OrderId = order.Entity.Id,
+                OrderId = newOrder.Id,
                 OrderDate = createOrderRequest.OrderDate,
                 OrderStatus1 = createOrderRequest.OrderStatus1
-            });
-            if (_context.SaveChanges() >= 1)
-            {
-                foreach (var detail in createOrderRequest.OrderDetails)
-                {
-                    _context.OrderDetails.Add(new OrderDetail
-                    {
-                        Quantity = detail.Quantity,
-                        OrderId = order.Entity.Id,
-                        Price = detail.Price,
-                        ProductId = detail.ProductId
-                    });
-                    if (_context.SaveChanges() >= 1)
-                    {
-                        var cartItem = _context.Carts.
-                            Where(x => x.ProductId == detail.ProductId && x.AccountId == createOrderRequest.CustomerId).FirstOrDefault();
-                        if (cartItem != null)
-                        {
-                            _context.Carts.Remove(cartItem);
-                            _context.SaveChanges();
-                        }
-                        var product = _context.Products.Find(detail.ProductId);
-                        product.Stock = product.Stock - detail.Quantity < 0 ? 0 : product.Stock - detail.Quantity;
-                        product.QuantitySold += detail.Quantity;
-                        if (_context.SaveChanges() >= 1)
+            };
+            _context.OrderStatuses.Add(newOrderStatus);
 
-                            return new CreateOrderResponse { OrederId = order.Entity.Id };
-                    }
+            // Add order details and update related entities
+            foreach (var detail in createOrderRequest.OrderDetails)
+            {
+                var newOrderDetail = new OrderDetail
+                {
+                    Quantity = detail.Quantity,
+                    OrderId = newOrder.Id,
+                    Price = detail.Price,
+                    ProductId = detail.ProductId
+                };
+                _context.OrderDetails.Add(newOrderDetail);
+
+                // Remove item from cart
+                var cartItem = _context.Carts
+                    .Where(x => x.ProductId == detail.ProductId && x.AccountId == createOrderRequest.CustomerId)
+                    .FirstOrDefault();
+                if (cartItem != null)
+                {
+                    _context.Carts.Remove(cartItem);
                 }
 
+                // Update product stock and quantity sold
+                var product = _context.Products.Find(detail.ProductId);
+                if (product != null)
+                {
+                    product.Stock = product.Stock - detail.Quantity < 0 ? 0 : product.Stock - detail.Quantity;
+                    product.QuantitySold += detail.Quantity;
+                }
             }
 
 
+            //transaction.Commit();
+            
+            transaction.Commit();
+            
+            return new CreateOrderResponse { OrederId = newOrder.Id - 1 };
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            _context.Database.RollbackTransaction();
+            //transaction.Rollback();
+            throw;
         }
-        return null;
     }
+
+
 
     public OrderResponse GetOrderById(int id)
     {
         var result = _context.Orders.Include(x => x.OrderStatuses).Include(x => x.OrderDetails).Include(x => x.Payment).
-           Where(x => x.Id == id).
+           Where(x => x.Id == id && x.OrderDetails.Any()).
               Select(x => new OrderResponse
               {
                   CustomerId = x.CustomerId,
@@ -93,7 +107,7 @@ public class OrderRepository : IOrderRepository
         if (status != null)
         {
             return _context.Orders.Include(x => x.OrderStatuses).Include(x => x.OrderDetails).Include(x => x.Payment).
-                Where(x => x.OrderStatuses.FirstOrDefault().OrderStatus1.ToLower().Equals(status.ToLower())).Select(x => new OrderResponse
+                Where(x => x.OrderStatuses.FirstOrDefault().OrderStatus1.ToLower().Equals(status.ToLower()) && x.OrderDetails.Any()).Select(x => new OrderResponse
                 {
                     CustomerId = x.CustomerId,
                     Id = x.Id,
@@ -120,7 +134,7 @@ public class OrderRepository : IOrderRepository
         if (status != null)
         {
             return _context.Orders.Include(x => x.OrderStatuses).Include(x => x.OrderDetails).Include(x => x.Payment).
-                Where(x => x.OrderStatuses.FirstOrDefault().OrderStatus1.ToLower().Equals(status.ToLower()) && x.CustomerId.Equals(userId)).Select(x => new OrderResponse
+                Where(x => x.OrderStatuses.FirstOrDefault().OrderStatus1.ToLower().Equals(status.ToLower()) && x.CustomerId.Equals(userId) && x.OrderDetails.Any()).Select(x => new OrderResponse
                 {
                     CustomerId = x.CustomerId,
                     Id = x.Id,
@@ -156,7 +170,7 @@ public class OrderRepository : IOrderRepository
     {
         var order = _context.Orders.Include(x => x.OrderStatuses).FirstOrDefault(x => x.Id == orderId);
         order.OrderStatuses.FirstOrDefault().OrderStatus1 = "Delivered";
-        
+
         if (_context.SaveChanges() >= 1)
             return true;
         return false;
